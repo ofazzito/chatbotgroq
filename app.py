@@ -33,10 +33,14 @@ def chat_with_groq(message, history):
     messages = [{"role": "system", "content": system_prompt}]
     
     # 2. Agregar el historial de la conversación previa para mantener la memoria
-    for user_msg, assistant_msg in history:
-        messages.append({"role": "user", "content": user_msg})
-        if assistant_msg:
-            messages.append({"role": "assistant", "content": assistant_msg})
+    for item in history:
+        if isinstance(item, dict):
+            messages.append({"role": item["role"], "content": item["content"]})
+        else:
+            user_msg, assistant_msg = item
+            messages.append({"role": "user", "content": user_msg})
+            if assistant_msg:
+                messages.append({"role": "assistant", "content": assistant_msg})
             
     # 3. Agregar el mensaje actual del usuario
     messages.append({"role": "user", "content": message})
